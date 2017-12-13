@@ -11,8 +11,8 @@ public class Network {
 	private HashMap<String, Station> stationList;
 	
 	public Network(){
-		network = new HashMap<>();
-		stationList = new HashMap<>();
+		network = new HashMap<>(12);
+		stationList = new HashMap<>(91);
 	}
 	
 	/**

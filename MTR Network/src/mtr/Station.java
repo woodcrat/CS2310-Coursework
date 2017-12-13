@@ -18,8 +18,8 @@ public class Station {
 	
 	public Station(String name){
 		this.name = name;
-		neighbouringStations = new HashSet<>();
-		linesBelongingTo = new ArrayList<>();
+		neighbouringStations = new HashSet<>(4);
+		linesBelongingTo = new ArrayList<>(2);
 		stationSearchNumber = 0;
 	}
 	

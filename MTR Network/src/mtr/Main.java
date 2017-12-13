@@ -33,7 +33,7 @@ public class Main implements Controller{
 	 * @return The name of all MTR stations that are the end point of the lines in the MTR network. 
 	 */
 	public String listAllTermini(){
-		HashSet<String> toReturn = new HashSet<>();    
+		HashSet<String> toReturn = new HashSet<>(20);    
 		//Iterating through all of the lines in the network and taking 
 		//their first and last Stations before adding them to the 
 		//termini HashSet to avoid repetition.
@@ -81,7 +81,7 @@ public class Main implements Controller{
 		//them to the HashSet to form a set of the neighbouring 
 		//Stations to the one in question.
 		try{
-			HashSet<String> stationNames = new HashSet<String>();
+			HashSet<String> stationNames = new HashSet<String>(4);
 		    Line thisLine =	mtr.getLines().get(line);
 			ArrayList<Station> linesStations = thisLine.getStations();
 			for(Station station : linesStations){

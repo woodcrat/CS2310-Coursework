@@ -10,7 +10,7 @@ public class Line {
 	
 	public Line(String name){
 		this.name = name;
-		linesStations = new ArrayList<>();
+		linesStations = new ArrayList<>(18);
 	}
 	
 	/**
