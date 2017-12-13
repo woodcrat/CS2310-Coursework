@@ -11,13 +11,26 @@ import java.util.Map;
 
 public class FileImporter {
 
+	//The reader of the file.
 	private BufferedReader input;
+	//The current Line being processed.
 	private String lineProcessing;
+	//The Line being processed broken down into individual elements
+	//via their "," (comma) separators.
 	private String[] lineBreakdown;
+	//The Network object generated from reading the file.
 	private Network mtrNetwork;
+	//The boolean for controlling when the file has been read
+	//(no more lines to process).
 	private boolean carryOnProcessing;
 	
+	/**
+	 * The constructor for the FileImporter.
+	 * @param fileName The name of the file that the train network is being read from. 
+	 */
 	public FileImporter(String fileName){
+		//Trying to create a new file reader object using the file name provided
+		//as a parameter.
 		try {
 			input = new BufferedReader(new FileReader(new File(fileName)));
 		} catch (FileNotFoundException e) {
@@ -27,9 +40,17 @@ public class FileImporter {
 		mtrNetwork = new Network();
 	}
 	
+	/**
+	 * Loads the file into the Network structure that represents the train network
+	 * set out in the .csv file (passed in during initiation).
+	 * @return The network object created from reading in the file. 
+	 */
 	public Network getFromFile(){
 		
 		while(carryOnProcessing){
+			//Reading the next line and as long as the method should still be 
+			//processing the file, break it down into individual components
+			//using the commas as the separators.
 			try {
 				lineProcessing = input.readLine();
 			} 
@@ -42,8 +63,12 @@ public class FileImporter {
 			}
 			else{
 				lineBreakdown = lineProcessing.split(",");
+				//Creating the Lines and Stations to be added to the network.
+				//Including checks to see if the Station object already 
+				//exists and if so using that rather than making a new one.
+				//Then also adding the links between the Lines and the Stations
+				//and adding them to the network.
 				Line line = new Line(lineBreakdown[0]);
-				
 				for(int i=1; i<lineBreakdown.length; i++){
 					Station station;					
 					if(mtrNetwork.getAllStations().get(lineBreakdown[i]) != null){
@@ -59,7 +84,9 @@ public class FileImporter {
 					mtrNetwork.addLine(line.getName(), line);
 			}
 		}
-
+		//Once the initial structure has been set out, use the Stations
+		//either side of the Stations within the Lines to add neighbours,
+		//allowing for traversal when path finding.
 		HashMap<String, Line> theNetworksLines = mtrNetwork.getLines();
 		for(Map.Entry<String, Line> cursor : theNetworksLines.entrySet()){
 			ArrayList<Station> theLinesStations = cursor.getValue().getStations();

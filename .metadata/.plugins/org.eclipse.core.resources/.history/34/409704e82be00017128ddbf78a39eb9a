@@ -1,0 +1,49 @@
+package mtr;
+
+import java.util.HashMap;
+
+public class Network {
+	
+	private HashMap<String, Line> network;
+	private HashMap<String, Station> stationList;
+	
+	public Network(){
+		network = new HashMap<>();
+		stationList = new HashMap<>();
+	}
+	
+	/**
+	 * Allows you to add a line to the network
+	 * @param lineName The name to be associated with the line, as a String 
+	 * @param line The Line object being added (holding the line's info/details)
+	 */
+	public void addLine(String lineName, Line line){
+		network.put(lineName, line);
+	}
+	
+	/**
+	 * Allows you to add an individual station to the network
+	 * @param stationName The name to be associated with the station, as a String
+	 * @param station The Station object being added (holding the station's info/details)
+	 * 	 
+	 */
+	public void addStation(String stationName, Station station){
+		stationList.put(stationName, station);
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public HashMap<String, Line> getLines(){
+		return network;
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public HashMap<String, Station> getAllStations(){
+		return stationList;
+	}
+}

@@ -1,0 +1,77 @@
+package mtr;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+
+public class Station {
+	
+	private String name;
+	private HashSet<Station> neighbouringStations;
+	private ArrayList<Line> linesBelongingTo;
+	//Holds the current "search number" of the station - can be used to identify
+	//whether the station has already been checked or not in pathfinding
+	private int stationSearchNumber;
+	
+	public Station(String name){
+		this.name = name;
+		neighbouringStations = new HashSet<>();
+		linesBelongingTo = new ArrayList<>();
+		stationSearchNumber = 0;
+	}
+	
+	/**
+	 * Add a neighbouring station to this station
+	 * @param neighbour the Station object that you want to add as a neighbouring station 
+	 */
+	public void addNeighbour(Station neighbour){
+		neighbouringStations.add(neighbour);
+	}
+	
+	/**
+	 * Add a line that this station belongs to 
+	 * @param The line object that this station is on 
+	 */
+	public void addLineBelongingTo(Line line){
+		linesBelongingTo.add(line);
+	}	
+	
+	/**
+	 * Get the name of the station
+	 * @return the String representation of the name of this station object 
+	 */
+	public String getName(){
+		return name;
+	}
+	
+	/**
+	 * Sets the value of the stationSearchNumber field to whatever number is passed in, providing a way
+	 * for the pathfinder to determine whether this station has already been explored or not when traversing.
+	 * It uses a number rather than a boolean to allow for an O(1) reset rather than O(n).
+	 * @param the int value that the station's search number should be set to 
+	 */
+	public void setExplored(int stationSearchNumber){
+		this.stationSearchNumber = stationSearchNumber;
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public ArrayList<Station> getUnexploredNeighbouringStations(int searchNumber){
+		ArrayList<Station> toReturn = new ArrayList<>();
+		for(Station station : neighbouringStations){
+			if(station.stationSearchNumber != searchNumber){
+				toReturn.add(station);
+			}
+		}
+		return toReturn;
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public ArrayList<Line> getLinesBelongingTo(){
+		return linesBelongingTo;
+	}
+}

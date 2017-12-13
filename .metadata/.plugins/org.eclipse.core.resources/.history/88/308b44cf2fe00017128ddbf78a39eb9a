@@ -1,0 +1,147 @@
+package mtr;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Stack;
+import java.util.HashMap;
+
+public class Main implements Controller{
+	
+	private FileImporter imp;
+	private Network mtr;
+	private Stack<Station> backwardsRoute;
+	private HashMap<String, Line> networkLines;
+	private int searchNumber;
+	
+	public Main(){
+		
+		imp = new FileImporter("resources/MTRsystem_partial.csv");
+		mtr = imp.getFromFile();
+		networkLines = mtr.getLines();
+		backwardsRoute = new Stack<>();
+		searchNumber = 1;
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public String listAllTermini(){
+		HashSet<String> toReturn = new HashSet<>();    
+		for(Map.Entry<String, Line> cursor : networkLines.entrySet()){
+			ArrayList<Station> linesStations = cursor.getValue().getStations();
+	    	Station startTermini = linesStations.get(0);
+			Station endTermini = linesStations.get(linesStations.size()-1);
+			toReturn.add(startTermini.getName());
+			toReturn.add(endTermini.getName());
+		}
+		return toReturn.toString();
+	}
+	
+	/**
+	 * Lists the stations in their respective order in the specified MTR line.
+	 * @param line	a specified line in the MTR network
+	 * @return	a String representation of all stations in the specified MTR line.
+	 */
+	public String listStationsInLine(String line){		
+		StringBuilder toReturn = new StringBuilder();
+		try{
+			Line thisLine = networkLines.get(line);
+			ArrayList<Station> linesStations = thisLine.getStations();
+			for(Station station : linesStations){
+				toReturn.append("\n" + station.getName());
+			}
+			return toReturn.toString();
+		}
+		catch(NullPointerException e){
+			return "Line name entered is invalid. Please try again";
+		}
+	}
+
+	/**
+	 * Lists the name of the line(s) that is/are directly connected with the specified MTR line.
+	 * @param line	a specified line in the MTR network
+	 * @return	a String representation of the name of the required line(s)
+	 */
+	public String listAllDirectlyConnectedLines(String line){
+		try{
+			HashSet<String> stationNames = new HashSet<String>();
+		    Line thisLine =	networkLines.get(line);
+			ArrayList<Station> linesStations = thisLine.getStations();
+			for(Station station : linesStations){
+				ArrayList<Line> stationsLines = station.getLinesBelongingTo();
+				for(Line aLine : stationsLines){
+					if(!aLine.getName().equals(line)){
+						stationNames.add(aLine.getName());
+					}
+				}
+			}
+			return stationNames.toString();
+		}
+		catch(NullPointerException e){
+			return "Line name entered is invalid. Please try again";
+		}
+	}
+	
+	/**
+	 * Lists a path between the specified stations.
+	 * The path is represented as a sequence of the name of the stations between the specified stations. 
+	 * @param stationA	the name of a station
+	 * @param stationB	the name of another station
+	 * @return	a String representation of a path between the specified stations
+	 */
+	public String showPathBetween(String stationA, String stationB){
+		boolean found = false;
+		Station firstStation = mtr.getAllStations().get(stationA);
+
+		if(firstStation == null){
+			return "Error : stationA not found. Please check your station name(s) and try again";
+		}
+		backwardsRoute.push(firstStation);
+		firstStation.setExplored(searchNumber);
+			
+		while(!found && !backwardsRoute.isEmpty()){
+			Station currentPos = backwardsRoute.peek();
+			if(currentPos.getName().equals(stationB)){
+				found = true;
+			}
+			else{
+				ArrayList<Station> neighbours = currentPos.getUnexploredNeighbouringStations(searchNumber);
+				if(neighbours.isEmpty()){
+					backwardsRoute.pop();
+				}
+				else{
+					Station nextStation = neighbours.get(0);
+					backwardsRoute.push(nextStation);
+					nextStation.setExplored(searchNumber);
+				}
+			}
+		}
+		if(backwardsRoute.isEmpty()){
+			searchNumber++;
+			return "Error: No route to stationB found. Please check your station name(s) and try again";
+		}
+		else{
+		StringBuilder toReturn = new StringBuilder();
+		for(Station station : backwardsRoute){
+			toReturn.append("\n" + station.getName());
+		}	
+		backwardsRoute.clear();
+		searchNumber++;
+		return toReturn.toString();
+		}
+	}
+	
+	/**
+	 * Main:
+	 *  Creates a new main (runs the network), uses the TUI.
+	 */
+	public static void main (String[] args) {
+
+		Main main = new Main();
+		@SuppressWarnings("unused")
+		TUI tui = new TUI(main);
+	}
+
+}

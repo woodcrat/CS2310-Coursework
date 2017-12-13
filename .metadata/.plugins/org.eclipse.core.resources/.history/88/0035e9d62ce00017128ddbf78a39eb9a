@@ -1,0 +1,49 @@
+package mtr;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+
+public class Station {
+	
+	private String name;
+	private HashSet<Station> neighbouringStations;
+	private ArrayList<Line> linesBelongingTo;
+	private int stationSearchNumber;
+	
+	public Station(String name){
+		this.name = name;
+		neighbouringStations = new HashSet<>();
+		linesBelongingTo = new ArrayList<>();
+		stationSearchNumber = 0;
+	}
+	
+	public void addNeighbour(Station neighbour){
+		neighbouringStations.add(neighbour);
+	}
+	
+	public void addLineBelongingTo(Line line){
+		linesBelongingTo.add(line);
+	}	
+	
+	public String getName(){
+		return name;
+	}
+	
+	public void setExplored(int stationSearchNumber){
+		this.stationSearchNumber = stationSearchNumber;
+	}
+	
+	public ArrayList<Station> getUnexploredNeighbouringStations(int searchNumber){
+		ArrayList<Station> toReturn = new ArrayList<>();
+		for(Station station : neighbouringStations){
+			if(station.stationSearchNumber != searchNumber){
+				toReturn.add(station);
+			}
+		}
+		return toReturn;
+	}
+	
+	public ArrayList<Line> getLinesBelongingTo(){
+		return linesBelongingTo;
+	}
+}

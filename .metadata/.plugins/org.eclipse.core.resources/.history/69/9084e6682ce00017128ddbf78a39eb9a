@@ -1,0 +1,38 @@
+package mtr;
+
+import java.util.ArrayList;
+
+public class Line {
+
+	private String name;
+	private ArrayList<Station> linesStations;
+	
+	public Line(String name){
+		this.name = name;
+		linesStations = new ArrayList<>();
+	}
+	
+	/**
+	 * Lets you add a Station object to the line
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public void addStation(Station toAdd){
+		linesStations.add(toAdd);
+	}
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public ArrayList<Station> getStations(){
+		return linesStations;
+	}	
+	
+	/**
+	 * Lists all termini in this MTR network.
+	 * @return the name of all MTR stations that are the end point of the lines in the MTR network. 
+	 */
+	public String getName(){
+		return name;
+	}
+}
